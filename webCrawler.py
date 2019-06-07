@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup as bs
+import re
 
 
 def hulkpop_spider(toSearch, max):
@@ -11,7 +12,7 @@ def hulkpop_spider(toSearch, max):
         if len(soup.select("h2 a")) == 0:
             break
 
-        for link in soup.select("h2 a"):
+        for link in soup.select("h2[class=post-title] > a"):
             itemNo += 1
             if itemNo > int(max):
                 print("\ndone! :)")
@@ -20,9 +21,10 @@ def hulkpop_spider(toSearch, max):
             print("\n" + str(itemNo) + ". " + link.string, link.get("href"), sep='\n')
 
             subSoup = bs(requests.get(link.get("href")).text, features="html.parser")
+
             for i in subSoup.findAll('p'):
-                if str(i)[3:8] == "TRACK":
-                    print(str(i).replace("<p>", "").replace("<br/>", "")[:-4])
+                if re.search("1. ", str(i)):
+                    print(str(i).replace("<br/>", "")[3:-4])
                     break
 
         page += 1
