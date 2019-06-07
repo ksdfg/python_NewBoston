@@ -18,5 +18,16 @@ def downloadCSV(url):
     fx.close();
 
 
-downloadCSV(
-    "http://insight.dev.schoolwires.com/HelpAssets/C2Assets/C2Files/C2ImportCalEventSample.csv")
+#downloadCSV("http://insight.dev.schoolwires.com/HelpAssets/C2Assets/C2Files/C2ImportCalEventSample.csv")
+
+def dec(funcn):
+    print("before call")
+    print(funcn())
+    print("after call")
+
+
+def nyan():
+    return "inside function"
+
+
+dec(nyan)
