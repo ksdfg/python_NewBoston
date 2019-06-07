@@ -30,5 +30,5 @@ def hulkpop_spider(toSearch, max):
     print("\ndone! :)")
 
 
-hulkpop_spider(input('what to search? '), input('how many results? '))
+hulkpop_spider(input('\nwhat to search? '), input('how many results? '))
 
