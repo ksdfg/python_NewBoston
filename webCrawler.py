@@ -1,23 +1,34 @@
 import requests
-import operator
 from bs4 import BeautifulSoup as bs
 
 
-def hulkpop_spider(maxPages):
+def hulkpop_spider(toSearch, max):
     page = 1
-    while page <= maxPages:
-        print("\nPage " + str(page) + ":\n")
+    itemNo = 0
 
-        sourceCode = requests.get("https://hulkpop.com/page/"+ str(page) + "/?s=")
-        plainText = sourceCode.text
-        soup = bs(plainText, features="html.parser")
+    while True:
+        soup = bs(requests.get("https://hulkpop.com/page/" + str(page) + "/?s=" + str(toSearch).replace(" ", "+")).text, features="html.parser")
+        if len(soup.select("h2 a")) == 0:
+            break
 
-        for link in soup.findAll('a', {'rel': 'bookmark'}):
-            print(link.string)
-            print(link.get("href") + "\n")
+        for link in soup.select("h2 a"):
+            itemNo += 1
+            if itemNo > int(max):
+                print("\ndone! :)")
+                return
+
+            print("\n" + str(itemNo) + ". " + link.string, link.get("href"), sep='\n')
+
+            subSoup = bs(requests.get(link.get("href")).text, features="html.parser")
+            for i in subSoup.findAll('p'):
+                if str(i)[3:8] == "TRACK":
+                    print(str(i).replace("<p>", "").replace("<br/>", "")[:-4])
+                    break
+
         page += 1
 
     print("\ndone! :)")
 
 
-hulkpop_spider(int(input('how many pages? ')))
+hulkpop_spider(input('what to search? '), input('how many results? '))
+
